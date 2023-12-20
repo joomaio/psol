@@ -72,7 +72,7 @@ class NoteFileModel extends Base
         else
         {
             $files[] = $data;
-        }
+        }        
 
         foreach($files as $item)
         {
@@ -199,7 +199,9 @@ class NoteFileModel extends Base
             $tmp_name = $file['name'];
             while(file_exists($path_attachment. '/' . $file['name']))
             {
-                $file['name'] = $index. "_". $tmp_name;
+                $file_name_parts = explode('.', $tmp_name);
+                $suffix =  $index > 0 ? '_' . $index : '';
+                $file['name'] = $file_name_parts[0]. $suffix . '.' . strtolower($file_name_parts[1]);
                 $index ++;
             }
             
