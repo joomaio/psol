@@ -1,94 +1,22 @@
-<?php echo $this->renderWidget('core::notification'); ?>
+<?php
+    $this->theme->add($this->url . 'assets/css/handsontable.full.min.css', '', 'handsontable-css');
+    $this->theme->add($this->url . 'assets/js/handsontable.full.min.js', '', 'bootstrap-handsontable');
+    echo $this->renderWidget('core::notification'); ?>
+<style>
+    .col-header-input:focus {
+        border-radius: 0px !important;
+        border: 2px solid #3b7ddd !important;
+        outline: none;
+    }
+</style>
 <div class="container-fluid align-items-center row justify-content-center mx-auto pt-3">
     <form enctype="multipart/form-data" action="<?php echo $this->link_form . '/' . $this->id ?>" method="post" id="form_submit">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-sm-12">
                 <input id="input_title" type="hidden" name="title">
                 <input id="_method" type="hidden" name="_method" value="<?php echo $this->id ? 'PUT' : 'POST' ?>">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr class="border-top-0 list-products">
-                            <th class="border-0 text-center" scope="col" width="200px">
-                                <button id="new_col" type="button" class="btn btn-outline-success">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
-                            </th>
-                            <?php if(isset($this->data['products']) && $this->data['products']) :  ?>
-                                <?php foreach($this->data['products'] as $product) : ?>
-                                    <th scope="col" class="border-top product-item position-relative">
-                                        <div class="content p-0">
-                                            <?php echo $product['title'];?>
-                                        </div>
-                                        <a class="remove-product position-absolute" href="">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </a>
-                                        <input type="hidden" name="title_product" value="<?php echo $product['title'];?>">
-                                        <input type="hidden" name="link_product" value="<?php echo isset($product['link']) ? $product['link'] : '';?>">
-                                        <input type="hidden" name="id_product" value="<?php echo $product['id'];?>">
-                                    </th>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <th scope="col" class="border-top product-item position-relative">
-                                    <div class="content p-0">
-                                    </div>
-                                    <a class="remove-product position-absolute" href="">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </a>
-                                    <input type="hidden" name="title_product" value="">
-                                    <input type="hidden" name="link_product" value="">
-                                    <input type="hidden" name="id_product" value="">
-                                </th>
-                            <?php endif; ?>
-                        </tr>
-                    </thead>
-                    <tbody class="feature-list">
-                        <?php if(isset($this->data['products']) && $this->data['products']) :  ?>
-                            <?php $product = $this->data['products'][0]; ?>
-                            <?php foreach($product['features'] as $index => $feature) : ?>
-                                <tr class="feature-item">
-                                    <th scope="row" class="feature-title position-relative">
-                                        <div class="content p-0">
-                                            <?php echo $feature['title']; ?>
-                                        </div>
-                                        <input type="text" value="<?php echo $feature['title']; ?>" name="feature-title" class="form-control d-none">
-                                        <a class="remove-feature position-absolute" href="">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </a>
-                                    </th>
-                                    <?php for ($i=0; $i < count($this->data['products']) ; $i++) : ?>
-                                        <td class="feature-content">
-                                            <div class="des">
-                                                <?php echo  isset($this->data['products'][$i]['features'][$index]['content']) ? $this->data['products'][$i]['features'][$index]['content'] : '' ?>
-                                            </div>
-                                            <input type="hidden" name="feature-content" value="<?php echo  isset($this->data['products'][$i]['features'][$index]['content']) ? htmlspecialchars($this->data['products'][$i]['features'][$index]['content']) : '' ?>">
-                                        </td>
-                                    <?php endfor; ?>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr class="feature-item">
-                                <th scope="row" class="feature-title position-relative">
-                                    <div class="content p-0">
-                                    </div>
-                                    <input type="text" name="feature-title" class="form-control d-none">
-                                    <a class="remove-feature position-absolute" href="">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </a>
-                                </th>
-                                <td class="feature-content">
-                                    <div class="des">
-                                    </div>
-                                    <input type="hidden" name="feature-content">
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-                <div class="w-100 text-center">
-                    <button id="new_row" type="button" class="btn btn-outline-success">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
+                <input id="table_data" type="hidden" name="table_data" value='<?php echo (array_key_exists('products', $this->data) ? json_encode($this->data['products']) : ''); ?>'>
+                <div id="note-table"></div>
                 <input id="save_close" type="hidden" name="save_close">
             </div>
             <?php $this->ui->field('structure'); ?>
